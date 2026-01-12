@@ -19,8 +19,11 @@ import {
   ChevronRight,
   Home,
   Menu,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", path: "/" },
@@ -139,6 +142,55 @@ export function Sidebar() {
             })}
           </ul>
         </nav>
+
+        {/* Auth Buttons */}
+        <div className={cn("px-3 pb-4", isCollapsed ? "space-y-2" : "space-y-2")}>
+          <Link to="/signin" onClick={() => setIsMobileOpen(false)}>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start gap-3",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <LogIn className="w-4 h-4 flex-shrink-0" />
+              <AnimatePresence>
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    Sign In
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Button>
+          </Link>
+          <Link to="/signup" onClick={() => setIsMobileOpen(false)}>
+            <Button
+              className={cn(
+                "w-full justify-start gap-3 gradient-primary",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <UserPlus className="w-4 h-4 flex-shrink-0" />
+              <AnimatePresence>
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    Sign Up
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Button>
+          </Link>
+        </div>
 
         {/* Collapse Toggle */}
         <div className="p-4 border-t border-sidebar-border hidden lg:block">
