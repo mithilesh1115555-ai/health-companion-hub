@@ -23,6 +23,9 @@ import SignalAnalysis from "./pages/SignalAnalysis";
 import CancerDetection from "./pages/CancerDetection";
 import Lifestyle from "./pages/Lifestyle";
 import NotFound from "./pages/NotFound";
+import CompleteProfile from "./pages/complete-profile";
+import PatientQRCode from "./pages/PatientQRCode";
+import PatientPage from "./pages/PatientPage";
 
 const queryClient = new QueryClient();
 
@@ -152,6 +155,17 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/complete-profile"
+              element={
+                <ProtectedRoute>
+                  <CompleteProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="patient/:id" element={<PatientPage />} />
+            <Route path="/my-qr" element={<PatientQRCode />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />

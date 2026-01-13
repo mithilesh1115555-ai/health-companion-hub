@@ -113,6 +113,14 @@ const features = [
     path: "/lifestyle",
     gradient: "bg-coral",
   },
+   {
+    icon: Users,
+    title: "User Profile",
+    description: "Manage your personal and medical information.",
+    path: "/complete-profile",
+    gradient: "gradient-primary",
+   }
+
 ];
 
 const stats = [

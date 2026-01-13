@@ -41,6 +41,7 @@ const menuItems = [
   { icon: Activity, label: "Signal Analysis", path: "/signal-analysis" },
   { icon: Search, label: "Cancer Detection", path: "/cancer-detection" },
   { icon: Heart, label: "Lifestyle", path: "/lifestyle" },
+  { icon: User, label: "Profile", path: "/complete-profile" },
 ];
 
 export function Sidebar() {
