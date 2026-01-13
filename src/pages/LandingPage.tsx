@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, Shield, Brain, Activity, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 const features = [
   {
@@ -39,13 +38,6 @@ const benefits = [
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const handleDemoSignIn = () => {
-    toast.success("Demo sign-in successful! Redirecting to dashboard...");
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1000);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -58,11 +50,8 @@ const LandingPage = () => {
             <span className="font-display font-bold text-xl text-foreground">MedCare AI</span>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={handleDemoSignIn}>
-              Sign In
-            </Button>
-            <Link to="/signup">
-              <Button className="gradient-primary">Sign Up</Button>
+            <Link to="/signin">
+              <Button className="gradient-primary">Sign in</Button>
             </Link>
           </div>
         </div>
@@ -93,7 +82,6 @@ const LandingPage = () => {
               <Button 
                 size="lg" 
                 className="gradient-primary text-lg px-8 py-6"
-                onClick={handleDemoSignIn}
               >
                 Get Started Free
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -240,7 +228,6 @@ const LandingPage = () => {
               <Button 
                 size="lg" 
                 className="bg-card text-foreground hover:bg-card/90 text-lg px-8"
-                onClick={handleDemoSignIn}
               >
                 Sign In (Demo)
               </Button>

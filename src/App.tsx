@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute.tsx";
 import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
@@ -26,32 +28,137 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<Index />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/skin-detection" element={<SkinDetection />} />
-          <Route path="/report-scanning" element={<ReportScanning />} />
-          <Route path="/appointments" element={<Appointments />} />
-          <Route path="/health-prediction" element={<HealthPrediction />} />
-          <Route path="/voice-consultation" element={<VoiceConsultation />} />
-          <Route path="/health-records" element={<HealthRecords />} />
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/mental-health" element={<MentalHealth />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/signal-analysis" element={<SignalAnalysis />} />
-          <Route path="/cancer-detection" element={<CancerDetection />} />
-          <Route path="/lifestyle" element={<Lifestyle />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            
+            {/* Protected Routes - Require Authentication */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chatbot"
+              element={
+                <ProtectedRoute>
+                  <Chatbot />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/skin-detection"
+              element={
+                <ProtectedRoute>
+                  <SkinDetection />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/report-scanning"
+              element={
+                <ProtectedRoute>
+                  <ReportScanning />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/appointments"
+              element={
+                <ProtectedRoute>
+                  <Appointments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/health-prediction"
+              element={
+                <ProtectedRoute>
+                  <HealthPrediction />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/voice-consultation"
+              element={
+                <ProtectedRoute>
+                  <VoiceConsultation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/health-records"
+              element={
+                <ProtectedRoute>
+                  <HealthRecords />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/alerts"
+              element={
+                <ProtectedRoute>
+                  <Alerts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mental-health"
+              element={
+                <ProtectedRoute>
+                  <MentalHealth />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/games"
+              element={
+                <ProtectedRoute>
+                  <Games />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/signal-analysis"
+              element={
+                <ProtectedRoute>
+                  <SignalAnalysis />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cancer-detection"
+              element={
+                <ProtectedRoute>
+                  <CancerDetection />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/lifestyle"
+              element={
+                <ProtectedRoute>
+                  <Lifestyle />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

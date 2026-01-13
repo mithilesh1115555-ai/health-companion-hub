@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquare,
@@ -19,14 +19,15 @@ import {
   ChevronRight,
   Home,
   Menu,
-  LogIn,
-  UserPlus,
+  LogOut,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const menuItems = [
-  { icon: Home, label: "Dashboard", path: "/" },
   { icon: MessageSquare, label: "Medical Q&A", path: "/chatbot" },
   { icon: ScanLine, label: "Skin Detection", path: "/skin-detection" },
   { icon: FileText, label: "Report Scanning", path: "/report-scanning" },
@@ -45,7 +46,31 @@ const menuItems = [
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out",
+      });
+      navigate("/");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to sign out",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   return (
     <>
@@ -143,54 +168,65 @@ export function Sidebar() {
           </ul>
         </nav>
 
-        {/* Auth Buttons */}
-        <div className={cn("px-3 pb-4", isCollapsed ? "space-y-2" : "space-y-2")}>
-          <Link to="/signin" onClick={() => setIsMobileOpen(false)}>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start gap-3",
-                isCollapsed && "justify-center px-0"
-              )}
-            >
-              <LogIn className="w-4 h-4 flex-shrink-0" />
-              <AnimatePresence>
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    className="whitespace-nowrap overflow-hidden"
-                  >
-                    Sign In
-                  </motion.span>
+        {/* User Profile & Sign Out */}
+        {user && (
+          <div className="px-3 pb-3 border-t border-sidebar-border">
+            <div className="pt-3 space-y-2">
+              {/* User Info */}
+              <div className={cn(
+                "flex items-center gap-3 px-3 py-2 rounded-xl",
+                isCollapsed && "justify-center"
+              )}>
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                <AnimatePresence>
+                  {!isCollapsed && (
+                    <motion.div
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="flex-1 min-w-0 overflow-hidden"
+                    >
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {user.email}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Sign Out Button */}
+              <button
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+                  "hover:bg-destructive/10 text-destructive group",
+                  isCollapsed && "justify-center",
+                  isSigningOut && "opacity-50 cursor-not-allowed"
                 )}
-              </AnimatePresence>
-            </Button>
-          </Link>
-          <Link to="/signup" onClick={() => setIsMobileOpen(false)}>
-            <Button
-              className={cn(
-                "w-full justify-start gap-3 gradient-primary",
-                isCollapsed && "justify-center px-0"
-              )}
-            >
-              <UserPlus className="w-4 h-4 flex-shrink-0" />
-              <AnimatePresence>
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    className="whitespace-nowrap overflow-hidden"
-                  >
-                    Sign Up
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Button>
-          </Link>
-        </div>
+              >
+                <LogOut className="w-5 h-5 flex-shrink-0" />
+                <AnimatePresence>
+                  {!isCollapsed && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                    >
+                      {isSigningOut ? "Signing out..." : "Sign Out"}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Collapse Toggle */}
         <div className="p-4 border-t border-sidebar-border hidden lg:block">
